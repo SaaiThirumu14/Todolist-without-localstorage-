@@ -1,21 +1,36 @@
-import { React, useState } from "react";
+import React, { useState, useEffect } from "react";
+
 const Data = () => {
-  const [todos, settodos] = useState("");
-  const [tododata, settododata] = useState([]);
+  const [todos, setTodos] = useState("");
+  const [tododata, setTododata] = useState([]);
+
+  // Load todos from localStorage on first render
+  useEffect(() => {
+    const storedTodos = JSON.parse(localStorage.getItem("todos"));
+    if (storedTodos) {
+      setTododata(storedTodos);
+    }
+  }, []);
+
+  // Save todos to localStorage whenever tododata changes
+  useEffect(() => {
+    localStorage.setItem("todos", JSON.stringify(tododata));
+  }, [tododata]);
 
   const handleData = (e) => {
-    settodos(e.target.value);
+    setTodos(e.target.value);
   };
 
-  const handleadd = () => {
-    if (todos) {
-      settododata([...tododata, todos]);
-      settodos("");
+  const handleAdd = () => {
+    if (todos.trim()) {
+      setTododata([...tododata, todos.trim()]);
+      setTodos("");
     }
   };
+
   const handleDelete = (index) => {
-    const updatesDetails = tododata.filter((_, i) => i !== index);
-    settododata(updatesDetails);
+    const updatedDetails = tododata.filter((_, i) => i !== index);
+    setTododata(updatedDetails);
   };
 
   return (
@@ -29,19 +44,19 @@ const Data = () => {
             value={todos}
             onChange={handleData}
           />
-          <button className="buttonstyle" onClick={handleadd}>
+          <button className="buttonstyle" onClick={handleAdd}>
             Add
           </button>
         </div>
         <div className="centredatabox">
-          <ui>
-            {tododata.map((todos, index) => (
+          <ul>
+            {tododata.map((todo, index) => (
               <li key={index}>
-                {todos}
+                {todo}
                 <button onClick={() => handleDelete(index)}>X</button>
               </li>
             ))}
-          </ui>
+          </ul>
         </div>
       </div>
     </div>

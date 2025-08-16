@@ -53,7 +53,7 @@ const Data = () => {
             {tododata.map((todo, index) => (
               <li key={index}>
                 {todo}
-                <button onClick={() => handleDelete(index)}>X</button>
+                <button className="remove-btn" onClick={() => handleDelete(index)}>X</button>
               </li>
             ))}
           </ul>
